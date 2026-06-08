@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>GR Distribution — Sales & Distribution Management</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gr-primary:#1a56db;
+  --gr-primary-light:#e8f0fe;
+  --gr-primary-dark:#1240a8;
+  --gr-accent:#f97316;
+  --gr-success:#16a34a;
+  --gr-warning:#ca8a04;
+  --gr-danger:#dc2626;
+  --gr-text:#111827;
+  --gr-text-2:#6b7280;
+  --gr-text-3:#9ca3af;
+  --gr-bg:#f9fafb;
+  --gr-card:#ffffff;
+  --gr-border:#e5e7eb;
+  --gr-radius:10px;
+  --gr-radius-lg:14px;
+}
+html,body{height:100%;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#e5e7eb}
+body{display:flex;justify-content:center;align-items:flex-start;padding:20px;min-height:100vh}
+
+/* ── Phone Shell ── */
+#phone{
+  width:390px;min-height:780px;background:var(--gr-card);
+  border-radius:32px;overflow:hidden;display:flex;
+  flex-direction:column;box-shadow:0 8px 40px rgba(0,0,0,0.22);
+  border:8px solid #1f2937;position:relative;
+}
+#screen{flex:1;overflow:hidden;display:flex;flex-direction:column;background:var(--gr-bg)}
+
+/* ── Pages ── */
+.page{display:none;flex-direction:column;flex:1;overflow:hidden}
+.page.active{display:flex}
+.scroll-area{flex:1;overflow-y:auto;padding:16px;scrollbar-width:none}
+.scroll-area::-webkit-scrollbar{display:none}
+
+/* ── Header ── */
+.header{
+  background:var(--gr-card);padding:14px 16px;
+  display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid var(--gr-border);min-height:56px;
+}
+.header h2{font-size:16px;font-weight:600;color:var(--gr-text);flex:1}
+.back-btn{
+  width:32px;height:32px;border-radius:8px;background:var(--gr-bg);
+  border:none;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;font-size:16px;
+}
+.action-btn{
+  height:32px;padding:0 12px;border-radius:8px;background:var(--gr-primary);
+  border:none;cursor:pointer;font-size:12px;font-weight:600;color:#fff;
+}
+
+/* ── Bottom Nav ── */
+.nav-tabs{
+  background:var(--gr-card);border-top:1px solid var(--gr-border);
+  display:flex;padding:4px 8px 8px;
+}
+.nav-tab{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:8px 4px;border:none;background:none;cursor:pointer;
+  border-radius:8px;
+}
+.nav-tab.active{background:var(--gr-primary-light)}
+.nav-tab span{font-size:9px;font-weight:500;color:var(--gr-text-2)}
+.nav-tab.active span{color:var(--gr-primary)}
+.nav-tab i{font-size:20px;color:var(--gr-text-3)}
+.nav-tab.active i{color:var(--gr-primary)}
+
+/* ── Stat Cards ── */
+.stat-card{
+  background:var(--gr-card);border:1px solid var(--gr-border);
+  border-radius:var(--gr-radius-lg);padding:14px;
+  display:flex;flex-direction:column;gap:4px;
+}
+.stat-label{font-size:11px;color:var(--gr-text-2);font-weight:500;text-transform:uppercase;letter-spacing:0.5px}
+.stat-val{font-size:22px;font-weight:700;color:var(--gr-text)}
+.stat-sub{font-size:11px;color:var(--gr-text-3)}
+.stat-icon{
+  width:36px;height:36px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;margin-bottom:6px;
+}
+
+/* ── Cards ── */
+.card{
+  background:var(--gr-card);border:1px solid var(--gr-border);
+  border-radius:var(--gr-radius-lg);padding:14px;margin-bottom:10px;
+}
+.card-title{font-size:13px;font-weight:600;color:var(--gr-text);margin-bottom:8px}
+
+/* ── List Items ── */
+.list-item{
+  background:var(--gr-card);border:1px solid var(--gr-border);
+  border-radius:var(--gr-radius);padding:12px 14px;margin-bottom:8px;
+  display:flex;align-items:center;gap:10px;cursor:pointer;
+}
+.list-item:active{background:var(--gr-bg)}
+.li-icon{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.li-body{flex:1;min-width:0}
+.li-title{font-size:13px;font-weight:600;color:var(--gr-text)}
+.li-sub{font-size:11px;color:var(--gr-text-2);margin-top:2px}
+.li-right{text-align:right;flex-shrink:0}
+.li-val{font-size:13px;font-weight:700;color:var(--gr-text)}
+.li-badge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;margin-top:3px;display:inline-block}
+
+/* ── Buttons ── */
+.btn-primary{
+  width:100%;padding:13px;background:var(--gr-primary);
+  color:#fff;border:none;border-radius:var(--gr-radius);
+  font-size:14px;font-weight:600;cursor:pointer;
+}
+.btn-primary:active{background:var(--gr-primary-dark)}
+.btn-outline{
+  width:100%;padding:13px;background:var(--gr-card);color:var(--gr-primary);
+  border:1.5px solid var(--gr-primary);border-radius:var(--gr-radius);
+  font-size:14px;font-weight:600;cursor:pointer;margin-top:10px;
+}
+.btn-sm{padding:7px 14px;background:var(--gr-primary);color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer}
+.btn-sm-outline{padding:7px 14px;background:var(--gr-card);color:var(--gr-primary);border:1.5px solid var(--gr-primary);border-radius:7px;font-size:12px;font-weight:600;cursor:pointer}
+
+/* ── Form Inputs ── */
+.input-group{margin-bottom:14px}
+.input-group label{display:block;font-size:12px;font-weight:600;color:var(--gr-text-2);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.4px}
+.input-group input,
+.input-group select{
+  width:100%;padding:11px 12px;background:var(--gr-bg);
+  border:1.5px solid var(--gr-border);border-radius:var(--gr-radius);
+  font-size:14px;color:var(--gr-text);outline:none;
+}
+.input-group input:focus,
+.input-group select:focus{border-color:var(--gr-primary)}
+
+/* ── Badges ── */
+.badge-green{background:#dcfce7;color:#15803d}
+.badge-red{background:#fee2e2;color:#b91c1c}
+.badge-amber{background:#fef9c3;color:#a16207}
+.badge-blue{background:#dbeafe;color:#1d4ed8}
+.badge-gray{background:#f3f4f6;color:#4b5563}
+
+/* ── Misc ── */
+.divider{height:1px;background:var(--gr-border);margin:12px 0}
+.gr-logo{display:flex;align-items:center;gap:8px}
+.gr-mark{width:36px;height:36px;background:var(--gr-primary);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:800;letter-spacing:-1px}
+.gr-name{font-size:18px;font-weight:800;color:var(--gr-primary);letter-spacing:-0.5px}
+.gr-tagline{font-size:10px;color:var(--gr-text-3);margin-top:1px}
+.section-label{font-size:11px;font-weight:700;color:var(--gr-text-2);text-transform:uppercase;letter-spacing:0.8px;margin:16px 0 8px}
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bill-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--gr-border)}
+.bill-row:last-child{border-bottom:none}
+.bill-total-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0}
+.stepper{display:flex;align-items:center;gap:8px}
+.stepper-btn{width:30px;height:30px;border-radius:7px;border:1.5px solid var(--gr-border);background:var(--gr-card);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:600;color:var(--gr-text)}
+.stepper-val{width:36px;text-align:center;font-size:14px;font-weight:700;color:var(--gr-text)}
+.pay-opt{background:var(--gr-card);border:2px solid var(--gr-border);border-radius:var(--gr-radius);padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer;margin-bottom:8px}
+.pay-opt.selected{border-color:var(--gr-primary);background:var(--gr-primary-light)}
+.pay-opt-icon{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.pay-opt-name{font-size:13px;font-weight:600;color:var(--gr-text)}
+.search-box{background:var(--gr-card);border:1.5px solid var(--gr-border);border-radius:var(--gr-radius);padding:10px 12px;display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.search-box input{border:none;background:none;outline:none;font-size:14px;color:var(--gr-text);flex:1}
+.search-box i{color:var(--gr-text-3);font-size:18px}
+.toast{position:absolute;top:14px;left:16px;right:16px;background:#1f2937;color:#fff;border-radius:10px;padding:12px 14px;font-size:13px;font-weight:500;display:none;z-index:100;text-align:center}
+.avatar{width:38px;height:38px;border-radius:50%;background:var(--gr-primary-light);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--gr-primary)}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:var(--gr-bg);border:1px solid var(--gr-border);color:var(--gr-text-2)}
+
+/* ── Responsive: full screen on mobile ── */
+@media(max-width:430px){
+  body{padding:0}
+  #phone{width:100%;min-height:100vh;border-radius:0;border:none;box-shadow:none}
+}
+</style>
+</head>
+<body>
+<div id="phone">
+  <div id="screen">
+
+    <!-- ═══════════════════════════════════════════
+         LOGIN
+    ════════════════════════════════════════════ -->
+    <div class="page active" id="pg-login">
+      <div class="scroll-area" style="display:flex;flex-direction:column;justify-content:center;min-height:100%">
+        <div style="text-align:center;margin-bottom:36px">
+          <div style="display:inline-flex;width:72px;height:72px;background:var(--gr-primary);border-radius:16px;align-items:center;justify-content:center;margin-bottom:14px">
+            <span style="font-size:28px;font-weight:900;color:#fff;letter-spacing:-1px">GR</span>
+          </div>
+          <h1 style="font-size:22px;font-weight:800;color:var(--gr-text)">GR Distribution</h1>
+          <p style="font-size:13px;color:var(--gr-text-2);margin-top:4px">Sales & Distribution Management</p>
+        </div>
+        <div class="card" style="margin-bottom:0">
+          <h3 style="font-size:15px;font-weight:700;color:var(--gr-text);margin-bottom:16px">Sign In</h3>
+          <div class="input-group">
+            <label>Mobile / Username</label>
+            <input type="text" placeholder="Enter username" value="admin" id="login-user">
+          </div>
+          <div class="input-group">
+            <label>Password</label>
+            <input type="password" placeholder="Enter password" value="••••••">
+          </div>
+          <div style="display:flex;gap:8px;margin-bottom:14px">
+            <div class="chip" style="cursor:pointer;background:var(--gr-primary-light);color:var(--gr-primary);border-color:var(--gr-primary)" onclick="document.getElementById('login-user').value='admin'">Admin</div>
+            <div class="chip" style="cursor:pointer" onclick="document.getElementById('login-user').value='salesman'">Salesman</div>
+          </div>
+          <button class="btn-primary" onclick="handleLogin()">Sign In</button>
+          <button class="btn-outline" onclick="goTo('pg-forgot')">Forgot Password</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         FORGOT PASSWORD
+    ════════════════════════════════════════════ -->
+    <div class="page" id="pg-forgot">
+      <div class="header">
+        <button class="back-btn" onclick="goTo('pg-login')"><i class="ti ti-arrow-left"></i></button>
+        <h2>Forgot Password</h2>
+      </div>
+      <div class="scroll-area">
+        <div style="text-align:center;padding:24px 0 20px">
+          <div style="width:60px;height:60px;background:var(--gr-primary-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:26px;color:var(--gr-primary)"><i class="ti ti-lock-open"></i></div>
+          <p style="font-size:13px;color:var(--gr-text-2)">Enter your registered mobile number to reset password</p>
+        </div>
+        <div class="input-group">
+          <label>Mobile Number</label>
+          <input type="tel" placeholder="Enter 10-digit mobile number">
+        </div>
+        <button class="btn-primary" onclick="showToast('OTP sent to your mobile number!');setTimeout(()=>goTo('pg-login'),1500)">Send OTP</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         ADMIN DASHBOARD
+    ════════════════════════════════════════════ -->
+    <div class="page" id="pg-admin-dash">
+      <div class="header">
+        <div class="gr-logo">
+          <div class="gr-mark">GR</div>
+          <div>
+            <div class="gr-name">GR Distribution</div>
+            <div class="gr-tagline">Admin Panel</div>
+          </div>
+        </div>
+        <button style="width:32px;height:32px;border-radius:8px;background:var(--gr-bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--gr-text-2)" onclick="goTo('pg-login')"><i class="ti ti-logout"></i></button>
+      </div>
+      <div class="scroll-area">
+        <div style="margin-bottom:12px">
+          <p style="font-size:12px;color:var(--gr-text-2)">Good morning, <strong>Govind Rao</strong> 👋</p>
+          <p style="font-size:11px;color:var(--gr-text-3)">Friday, 5 June 2026</p>
+        </div>
+        <div class="row-2" style="margin-bottom:10px">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#dbeafe;color:#1d4ed8"><i class="ti ti-currency-rupee"></i></div>
+            <div class="stat-label">Today's Sales</div>
+            <div class="stat-val">₹18,240</div>
+            <div class="stat-sub">↑ 12% vs yesterday</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#dcfce7;color:#15803d"><i class="ti ti-clipboard-list"></i></div>
+            <div class="stat-label">Orders Today</div>
+            <div class="stat-val">24</div>
+            <div class="stat-sub">8 pending delivery</div>
+          </div>
+        </div>
+        <div class="row-2" style="margin-bottom:10px">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#fef9c3;color:#a16207"><i class="ti ti-clock"></i></div>
+            <div class="stat-label">Pending Payment</div>
+            <div class="stat-val">₹34,500</div>
+            <div class="stat-sub">12 shops</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#f3e8ff;color:#7c3aed"><i class="ti ti-building-store"></i></div>
+            <div class="stat-label">Active Shops</div>
+            <div class="stat-val">48</div>
+            <div class="stat-sub">3 new this month</div>
+          </div>
+        </div>
+        <div class="section-label">Quick Actions</div>
+        <div class="row-2">
+          <div class="list-item" style="margin-bottom:0" onclick="goTo('pg-orders')">
+            <div class="li-icon" style="background:#dbeafe;color:#1d4ed8"><i class="ti ti-clipboard-list"></i></div>
+            <div class="li-body"><div class="li-title" style="font-size:12px">Orders</div></div>
+          </div>
+          <div class="list-item" style="margin-bottom:0" onclick="goTo('pg-products')">
+            <div class="li-icon" style="background:#dcfce7;color:#15803d"><i class="ti ti-package"></i></div>
+            <div class="li-body"><div class="li-title" style="font-size:12px">Products</div></div>
+          </div>
+          <div class="list-item" style="margin-bottom:0" onclick="goTo('pg-shops')">
+            <div class="li-icon" style="background:#fef9c3;color:#a16207"><i class="ti ti-building-store"></i></div>
+            <div class="li-body"><div class="li-title" style="font-size:12px">Shops</div></div>
+          </div>
+          <div class="list-item" style="margin-bottom:0" onclick="goTo('pg-salesmen')">
+            <div class="li-icon" style="background:#fce7f3;color:#be185d"><i class="ti ti-users"></i></div>
+            <div class="li-body"><div class="li-title" style="font-size:12px">Salesmen</div></div>
+          </div>
+          <div class="list-item" style="margin-bottom:0;grid-column:1/-1" onclick="goTo('pg-reports')">
+            <div class="li-icon" style="background:#f3e8ff;color:#7c3aed"><i class="ti ti-chart-bar"></i></div>
+            <div class="li-body"><div class="li-title">Reports</div><div class="li-sub">Daily, Monthly, Collections</div></div>
+            <i class="ti ti-chevron-right" style="color:var(--gr-text-3)"></i>
+          </div>
+        </div>
+        <div class="section-label">Today's Orders</div>
+        <div class="list-item" onclick="goTo('pg-bill')">
+          <div class="avatar">RS</div>
+          <div class="li-body"><div class="li-title">Ram Stores</div><div class="li-sub">by Ravi • 10:30 AM</div></div>
+          <div class="li-right"><div class="li-val">₹1,240</div><div class="li-badge badge-green">Paid</div></div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-bill')">
+          <div class="avatar">SK</div>
+          <div class="li-body"><div class="li-title">Sai Kirana</div><div class="li-sub">by Ravi • 11:15 AM</div></div>
+          <div class="li-right"><div class="li-val">₹860</div><div class="li-badge badge-amber">Pending</div></div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-bill')">
+          <div class="avatar">LM</div>
+          <div class="li-body"><div class="li-title">Lucky Mini Mart</div><div class="li-sub">by Suresh • 12:00 PM</div></div>
+          <div class="li-right"><div class="li-val">₹2,100</div><div class="li-badge badge-green">Paid</div></div>
+        </div>
+      </div>
+      <div class="nav-tabs">
+        <button class="nav-tab active" onclick="goTo('pg-admin-dash')"><i class="ti ti-layout-dashboard"></i><span>Home</span></button>
+        <button class="nav-tab" onclick="goTo('pg-orders')"><i class="ti ti-clipboard-list"></i><span>Orders</span></button>
+        <button class="nav-tab" onclick="goTo('pg-products')"><i class="ti ti-package"></i><span>Products</span></button>
+        <button class="nav-tab" onclick="goTo('pg-shops')"><i class="ti ti-building-store"></i><span>Shops</span></button>
+        <button class="nav-tab" onclick="goTo('pg-reports')"><i class="ti ti-chart-bar"></i><span>Reports</span></button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         ORDERS
+    ════════════════════════════════════════════ -->
+    <div class="page" id="pg-orders">
+      <div class="header">
+        <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i></button>
+        <h2>Order Management</h2>
+      </div>
+      <div class="scroll-area">
+        <div class="search-box">
+          <i class="ti ti-search"></i>
+          <input type="text" placeholder="Search orders...">
+        </div>
+        <div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px">
+          <div class="chip" style="white-space:nowrap;background:var(--gr-primary-light);color:var(--gr-primary);border-color:var(--gr-primary)">All (24)</div>
+          <div class="chip" style="white-space:nowrap">Pending (8)</div>
+          <div class="chip" style="white-space:nowrap">Paid (14)</div>
+          <div class="chip" style="white-space:nowrap">Credit (2)</div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-bill')">
+          <div class="avatar">RS</div>
+          <div class="li-body"><div class="li-title">Ram Stores</div><div class="li-sub">ORD-001 • 5 Jun • 3 items</div></div>
+          <div class="li-right"><div class="li-val">₹1,240</div><div class="li-badge badge-green">Paid</div></div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-bill')">
+          <div class="avatar">SK</div>
+          <div class="li-body"><div class="li-title">Sai Kirana</div><div class="li-sub">ORD-002 • 5 Jun • 2 items</div></div>
+          <div class="li-right"><div class="li-val">₹860</div><div class="li-badge badge-amber">Pending</div></div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-bill')">
+          <div class="avatar">LM</div>
+          <div class="li-body"><div class="li-title">Lucky Mini Mart</div><div class="li-sub">ORD-003 • 5 Jun • 5 items</div></div>
+          <div class="li-right"><div class="li-val">₹2,100</div><div class="li-badge badge-green">Paid</div></div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-bill')">
+          <div class="avatar">VT</div>
+          <div class="li-body"><div class="li-title">Vinayak Traders</div><div class="li-sub">ORD-004 • 4 Jun • 4 items</div></div>
+          <div class="li-right"><div class="li-val">₹3,400</div><div class="li-badge badge-red">Credit</div></div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-bill')">
+          <div class="avatar">SM</div>
+          <div class="li-body"><div class="li-title">Suresh Mart</div><div class="li-sub">ORD-005 • 4 Jun • 2 items</div></div>
+          <div class="li-right"><div class="li-val">₹680</div><div class="li-badge badge-amber">Pending</div></div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-bill')">
+          <div class="avatar">BK</div>
+          <div class="li-body"><div class="li-title">Balaji Kirana</div><div class="li-sub">ORD-006 • 4 Jun • 6 items</div></div>
+          <div class="li-right"><div class="li-val">₹4,200</div><div class="li-badge badge-green">Paid</div></div>
+        </div>
+      </div>
+      <div class="nav-tabs">
+        <button class="nav-tab" onclick="goTo('pg-admin-dash')"><i class="ti ti-layout-dashboard"></i><span>Home</span></button>
+        <button class="nav-tab active"><i class="ti ti-clipboard-list"></i><span>Orders</span></button>
+        <button class="nav-tab" onclick="goTo('pg-products')"><i class="ti ti-package"></i><span>Products</span></button>
+        <button class="nav-tab" onclick="goTo('pg-shops')"><i class="ti ti-building-store"></i><span>Shops</span></button>
+        <button class="nav-tab" onclick="goTo('pg-reports')"><i class="ti ti-chart-bar"></i><span>Reports</span></button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         PRODUCTS
+    ════════════════════════════════════════════ -->
+    <div class="page" id="pg-products">
+      <div class="header">
+        <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i></button>
+        <h2>Products</h2>
+        <button class="action-btn" onclick="goTo('pg-add-product')">+ Add</button>
+      </div>
+      <div class="scroll-area">
+        <div class="search-box">
+          <i class="ti ti-search"></i>
+          <input type="text" placeholder="Search products...">
+        </div>
+        <div class="list-item" onclick="goTo('pg-edit-product')">
+          <div class="li-icon" style="background:#fef9c3;color:#a16207"><i class="ti ti-package"></i></div>
+          <div class="li-body"><div class="li-title">GR Roasted Peanuts 200g</div><div class="li-sub">Stock: 450 packs</div></div>
+          <div class="li-right"><div class="li-val">₹45</div><div class="li-badge badge-green">Active</div></div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-edit-product')">
+          <div class="li-icon" style="background:#fef9c3;color:#a16207"><i class="ti ti-package"></i></div>
+          <div class="li-body"><div class="li-title">GR Salted Peanuts 100g</div><div class="li-sub">Stock: 280 packs</div></div>
+          <div class="li-right"><div class="li-val">₹25</div><div class="li-badge badge-green">Active</div></div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-edit-product')">
+          <div class="li-icon" style="background:#fef9c3;color:#a16207"><i class="ti ti-package"></i></div>
+          <div class="li-body"><div class="li-title">GR Masala Peanuts 200g</div><div class="li-sub">Stock: 120 packs</div></div>
+          <div class="li-right"><div class="li-val">₹48</div><div class="li-badge badge-amber">Low Stock</div></div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-edit-product')">
+          <div class="li-icon" style="background:#fef9c3;color:#a16207"><i class="ti ti-package"></i></div>
+          <div class="li-body"><div class="li-title">GR Premium Mix 500g</div><div class="li-sub">Stock: 0 packs</div></div>
+          <div class="li-right"><div class="li-val">₹120</div><div class="li-badge badge-red">Out of Stock</div></div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-edit-product')">
+          <div class="li-icon" style="background:#fef9c3;color:#a16207"><i class="ti ti-package"></i></div>
+          <div class="li-body"><div class="li-title">GR Chilli Peanuts 100g</div><div class="li-sub">Stock: 340 packs</div></div>
+          <div class="li-right"><div class="li-val">₹28</div><div class="li-badge badge-green">Active</div></div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-edit-product')">
+          <div class="li-icon" style="background:#fef9c3;color:#a16207"><i class="ti ti-package"></i></div>
+          <div class="li-body"><div class="li-title">GR Honey Coated 200g</div><div class="li-sub">Stock: 200 packs</div></div>
+          <div class="li-right"><div class="li-val">₹55</div><div class="li-badge badge-green">Active</div></div>
+        </div>
+      </div>
+      <div class="nav-tabs">
+        <button class="nav-tab" onclick="goTo('pg-admin-dash')"><i class="ti ti-layout-dashboard"></i><span>Home</span></button>
+        <button class="nav-tab" onclick="goTo('pg-orders')"><i class="ti ti-clipboard-list"></i><span>Orders</span></button>
+        <button class="nav-tab active"><i class="ti ti-package"></i><span>Products</span></button>
+        <button class="nav-tab" onclick="goTo('pg-shops')"><i class="ti ti-building-store"></i><span>Shops</span></button>
+        <button class="nav-tab" onclick="goTo('pg-reports')"><i class="ti ti-chart-bar"></i><span>Reports</span></button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         ADD PRODUCT
+    ════════════════════════════════════════════ -->
+    <div class="page" id="pg-add-product">
+      <div class="header">
+        <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i></button>
+        <h2>Add Product</h2>
+      </div>
+      <div class="scroll-area">
+        <div class="input-group"><label>Product Name</label><input type="text" placeholder="e.g. GR Roasted Peanuts 200g"></div>
+        <div class="input-group"><label>Category</label>
+          <select><option>Roasted Peanuts</option><option>Salted Peanuts</option><option>Flavoured Peanuts</option><option>Mixed Snacks</option></select>
+        </div>
+        <div class="row-2">
+          <div class="input-group"><label>Price (₹)</label><input type="number" placeholder="0.00"></div>
+          <div class="input-group"><label>Unit</label><select><option>Pack</option><option>Bag</option><option>Box</option><option>Kg</option></select></div>
+        </div>
+        <div class="input-group"><label>Initial Stock</label><input type="number" placeholder="Enter quantity"></div>
+        <div class="input-group"><label>HSN Code</label><input type="text" placeholder="Optional"></div>
+        <div class="input-group"><label>GST %</label><select><option>0%</option><option>5%</option><option>12%</option><option>18%</option></select></div>
+        <button class="btn-primary" onclick="showToast('Product added successfully!');goTo('pg-products')">Save Product</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         EDIT PRODUCT
+    ════════════════════════════════════════════ -->
+    <div class="page" id="pg-edit-product">
+      <div class="header">
+        <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i></button>
+        <h2>Edit Product</h2>
+        <button class="action-btn" style="background:#fee2e2;color:#b91c1c;border:none" onclick="showToast('Product deleted!');goTo('pg-products')">Delete</button>
+      </div>
+      <div class="scroll-area">
+        <div class="input-group"><label>Product Name</label><input type="text" value="GR Roasted Peanuts 200g"></div>
+        <div class="input-group"><label>Category</label><select><option selected>Roasted Peanuts</option><option>Salted Peanuts</option></select></div>
+        <div class="row-2">
+          <div class="input-group"><label>Price (₹)</label><input type="number" value="45"></div>
+          <div class="input-group"><label>Unit</label><select><option selected>Pack</option></select></div>
+        </div>
+        <div class="input-group"><label>Current Stock</label><input type="number" value="450"></div>
+        <div class="input-group"><label>GST %</label><select><option>5%</option></select></div>
+        <div class="card" style="margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:13px;color:var(--gr-text-2)">Product Status</span>
+            <span class="li-badge badge-green">Active</span>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="showToast('Product updated!');goBack()">Update Product</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         SHOPS
+    ════════════════════════════════════════════ -->
+    <div class="page" id="pg-shops">
+      <div class="header">
+        <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i></button>
+        <h2>Shop Management</h2>
+        <button class="action-btn" onclick="goTo('pg-add-shop')">+ Add</button>
+      </div>
+      <div class="scroll-area">
+        <div class="search-box">
+          <i class="ti ti-search"></i>
+          <input type="text" placeholder="Search shops...">
+        </div>
+        <div class="list-item" onclick="goTo('pg-shop-detail')">
+          <div class="avatar">RS</div>
+          <div class="li-body"><div class="li-title">Ram Stores</div><div class="li-sub">Ramesh Kumar • 9876543210</div></div>
+          <div class="li-right"><div class="li-badge badge-green">Active</div></div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-shop-detail')">
+          <div class="avatar">SK</div>
+          <div class="li-body"><div class="li-title">Sai Kirana</div><div class="li-sub">Sai Prasad • 9123456780</div></div>
+          <div class="li-right"><div class="li-badge badge-amber">Due: ₹860</div></div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-shop-detail')">
+          <div class="avatar">LM</div>
+          <div class="li-body"><div class="li-title">Lucky Mini Mart</div><div class="li-sub">Lakshmi Devi • 9345678901</div></div>
+          <div class="li-right"><div class="li-badge badge-green">Active</div></div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-shop-detail')">
+          <div class="avatar">VT</div>
+          <div class="li-body"><div class="li-title">Vinayak Traders</div><div class="li-sub">Vinay Kumar • 9567890123</div></div>
+          <div class="li-right"><div class="li-badge badge-red">Due: ₹3,400</div></div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-shop-detail')">
+          <div class="avatar">BK</div>
+          <div class="li-body"><div class="li-title">Balaji Kirana</div><div class="li-sub">Balaji Rao • 9678901234</div></div>
+          <div class="li-right"><div class="li-badge badge-green">Active</div></div>
+        </div>
+      </div>
+      <div class="nav-tabs">
+        <button class="nav-tab" onclick="goTo('pg-admin-dash')"><i class="ti ti-layout-dashboard"></i><span>Home</span></button>
+        <button class="nav-tab" onclick="goTo('pg-orders')"><i class="ti ti-clipboard-list"></i><span>Orders</span></button>
+        <button class="nav-tab" onclick="goTo('pg-products')"><i class="ti ti-package"></i><span>Products</span></button>
+        <button class="nav-tab active"><i class="ti ti-building-store"></i><span>Shops</span></button>
+        <button class="nav-tab" onclick="goTo('pg-reports')"><i class="ti ti-chart-bar"></i><span>Reports</span></button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         SHOP DETAIL
+    ════════════════════════════════════════════ -->
+    <div class="page" id="pg-shop-detail">
+      <div class="header">
+        <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i></button>
+        <h2>Shop Details</h2>
+        <button class="action-btn" onclick="goTo('pg-add-shop')">Edit</button>
+      </div>
+      <div class="scroll-area">
+        <div class="card" style="text-align:center;margin-bottom:14px">
+          <div style="width:56px;height:56px;border-radius:50%;background:var(--gr-primary-light);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--gr-primary);margin:0 auto 10px">RS</div>
+          <div style="font-size:16px;font-weight:700;color:var(--gr-text)">Ram Stores</div>
+          <div class="li-badge badge-green" style="margin-top:4px">Active</div>
+        </div>
+        <div class="card">
+          <div class="bill-row"><span style="font-size:12px;color:var(--gr-text-2)">Owner Name</span><span style="font-size:13px;font-weight:600">Ramesh Kumar</span></div>
+          <div class="bill-row"><span style="font-size:12px;color:var(--gr-text-2)">Mobile</span><span style="font-size:13px;font-weight:600">9876543210</span></div>
+          <div class="bill-row"><span style="font-size:12px;color:var(--gr-text-2)">Address</span><span style="font-size:13px;font-weight:600;text-align:right;max-width:180px">12, Gandhi Nagar, Chennai</span></div>
+          <div class="bill-row"><span style="font-size:12px;color:var(--gr-text-2)">Assigned Salesman</span><span style="font-size:13px;font-weight:600">Ravi Kumar</span></div>
+          <div class="bill-row" style="border:none"><span style="font-size:12px;color:var(--gr-text-2)">Outstanding Due</span><span style="font-size:13px;font-weight:700;color:var(--gr-success)">₹0</span></div>
+        </div>
+        <div class="section-label">Recent Orders</div>
+        <div class="list-item" onclick="goTo('pg-bill')">
+          <div class="li-body"><div class="li-title">Order #ORD-001</div><div class="li-sub">5 Jun 2026 • 3 items</div></div>
+          <div class="li-right"><div class="li-val">₹1,240</div><div class="li-badge badge-green">Paid</div></div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-bill')">
+          <div class="li-body"><div class="li-title">Order #ORD-008</div><div class="li-sub">2 Jun 2026 • 2 items</div></div>
+          <div class="li-right"><div class="li-val">₹980</div><div class="li-badge badge-green">Paid</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         ADD SHOP
+    ════════════════════════════════════════════ -->
+    <div class="page" id="pg-add-shop">
+      <div class="header">
+        <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i></button>
+        <h2>Add Shop</h2>
+      </div>
+      <div class="scroll-area">
+        <div class="input-group"><label>Shop Name</label><input type="text" placeholder="Enter shop name"></div>
+        <div class="input-group"><label>Owner Name</label><input type="text" placeholder="Owner's full name"></div>
+        <div class="input-group"><label>Mobile Number</label><input type="tel" placeholder="10-digit mobile"></div>
+        <div class="input-group"><label>Address</label><input type="text" placeholder="Full address"></div>
+        <div class="input-group"><label>Area / Locality</label><input type="text" placeholder="Area name"></div>
+        <div class="input-group"><label>Assign Salesman</label>
+          <select><option>Ravi Kumar</option><option>Suresh Patel</option><option>Anand Singh</option></select>
+        </div>
+        <button class="btn-primary" onclick="showToast('Shop added successfully!');goTo('pg-shops')">Save Shop</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         SALESMEN
+    ════════════════════════════════════════════ -->
+    <div class="page" id="pg-salesmen">
+      <div class="header">
+        <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i></button>
+        <h2>Salesman Management</h2>
+        <button class="action-btn">+ Add</button>
+      </div>
+      <div class="scroll-area">
+        <div class="row-2" style="margin-bottom:12px">
+          <div class="stat-card"><div class="stat-label">Total Salesmen</div><div class="stat-val">4</div></div>
+          <div class="stat-card"><div class="stat-label">Active Today</div><div class="stat-val" style="color:var(--gr-success)">3</div></div>
+        </div>
+        <div class="list-item">
+          <div class="avatar" style="background:#dbeafe;color:#1d4ed8">RK</div>
+          <div class="li-body"><div class="li-title">Ravi Kumar</div><div class="li-sub">9876543210 • 18 shops</div></div>
+          <div class="li-right"><div class="li-val">₹8,400</div><div class="li-badge badge-green">Active</div></div>
+        </div>
+        <div class="list-item">
+          <div class="avatar" style="background:#dcfce7;color:#15803d">SP</div>
+          <div class="li-body"><div class="li-title">Suresh Patel</div><div class="li-sub">9234567891 • 14 shops</div></div>
+          <div class="li-right"><div class="li-val">₹6,200</div><div class="li-badge badge-green">Active</div></div>
+        </div>
+        <div class="list-item">
+          <div class="avatar" style="background:#fce7f3;color:#be185d">AS</div>
+          <div class="li-body"><div class="li-title">Anand Singh</div><div class="li-sub">9345678902 • 10 shops</div></div>
+          <div class="li-right"><div class="li-val">₹3,640</div><div class="li-badge badge-green">Active</div></div>
+        </div>
+        <div class="list-item">
+          <div class="avatar" style="background:#f3e8ff;color:#7c3aed">MR</div>
+          <div class="li-body"><div class="li-title">Muthu Raj</div><div class="li-sub">9456789013 • 6 shops</div></div>
+          <div class="li-right"><div class="li-val">₹0</div><div class="li-badge badge-gray">Off Today</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         REPORTS
+    ════════════════════════════════════════════ -->
+    <div class="page" id="pg-reports">
+      <div class="header">
+        <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i></button>
+        <h2>Reports</h2>
+      </div>
+      <div class="scroll-area">
+        <div class="section-label">This Month — June 2026</div>
+        <div class="row-2" style="margin-bottom:10px">
+          <div class="stat-card"><div class="stat-label">Monthly Sales</div><div class="stat-val">₹2.4L</div><div class="stat-sub">Jun 1–5</div></div>
+          <div class="stat-card"><div class="stat-label">Orders</div><div class="stat-val">118</div><div class="stat-sub">Avg ₹2,033</div></div>
+        </div>
+        <div class="row-2" style="margin-bottom:12px">
+          <div class="stat-card"><div class="stat-label">Collected</div><div class="stat-val" style="color:var(--gr-success)">₹1.9L</div></div>
+          <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-val" style="color:var(--gr-danger)">₹34,500</div></div>
+        </div>
+        <div class="card" style="margin-bottom:10px">
+          <div class="card-title">Daily Sales (This Week)</div>
+          <div id="mini-chart" style="display:flex;align-items:flex-end;gap:6px;height:80px;padding-top:8px"></div>
+          <div style="display:flex;gap:6px;margin-top:6px">
+            <span style="font-size:10px;color:var(--gr-text-3);flex:1;text-align:center">Mon</span>
+            <span style="font-size:10px;color:var(--gr-text-3);flex:1;text-align:center">Tue</span>
+            <span style="font-size:10px;color:var(--gr-text-3);flex:1;text-align:center">Wed</span>
+            <span style="font-size:10px;color:var(--gr-text-3);flex:1;text-align:center">Thu</span>
+            <span style="font-size:10px;color:var(--gr-text-3);flex:1;text-align:center">Fri</span>
+          </div>
+        </div>
+        <div class="section-label">Pending Collections</div>
+        <div class="list-item">
+          <div class="avatar">SK</div>
+          <div class="li-body"><div class="li-title">Sai Kirana</div><div class="li-sub">Due since 3 Jun</div></div>
+          <div class="li-right"><div class="li-val" style="color:var(--gr-danger)">₹860</div></div>
+        </div>
+        <div class="list-item">
+          <div class="avatar">VT</div>
+          <div class="li-body"><div class="li-title">Vinayak Traders</div><div class="li-sub">Due since 2 Jun</div></div>
+          <div class="li-right"><div class="li-val" style="color:var(--gr-danger)">₹3,400</div></div>
+        </div>
+        <div class="list-item">
+          <div class="avatar">SM</div>
+          <div class="li-body"><div class="li-title">Suresh Mart</div><div class="li-sub">Due since 4 Jun</div></div>
+          <div class="li-right"><div class="li-val" style="color:var(--gr-danger)">₹680</div></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:4px">
+          <button class="btn-sm-outline" style="flex:1" onclick="showToast('Exporting PDF report...')">Export PDF</button>
+          <button class="btn-sm" style="flex:1" onclick="showToast('Exporting Excel report...')">Export Excel</button>
+        </div>
+      </div>
+      <div class="nav-tabs">
+        <button class="nav-tab" onclick="goTo('pg-admin-dash')"><i class="ti ti-layout-dashboard"></i><span>Home</span></button>
+        <button class="nav-tab" onclick="goTo('pg-orders')"><i class="ti ti-clipboard-list"></i><span>Orders</span></button>
+        <button class="nav-tab" onclick="goTo('pg-products')"><i class="ti ti-package"></i><span>Products</span></button>
+        <button class="nav-tab" onclick="goTo('pg-shops')"><i class="ti ti-building-store"></i><span>Shops</span></button>
+        <button class="nav-tab active"><i class="ti ti-chart-bar"></i><span>Reports</span></button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         SALESMAN DASHBOARD
+    ════════════════════════════════════════════ -->
+    <div class="page" id="pg-sales-dash">
+      <div class="header">
+        <div class="gr-logo">
+          <div class="gr-mark">GR</div>
+          <div>
+            <div class="gr-name">GR Distribution</div>
+            <div class="gr-tagline">Salesman Panel</div>
+          </div>
+        </div>
+        <button style="width:32px;height:32px;border-radius:8px;background:var(--gr-bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--gr-text-2)" onclick="goTo('pg-login')"><i class="ti ti-logout"></i></button>
+      </div>
+      <div class="scroll-area">
+        <div style="margin-bottom:12px">
+          <p style="font-size:12px;color:var(--gr-text-2)">Hello, <strong>Ravi Kumar</strong> 👋</p>
+          <p style="font-size:11px;color:var(--gr-text-3)">Friday, 5 June 2026</p>
+        </div>
+        <div class="row-2" style="margin-bottom:10px">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#dbeafe;color:#1d4ed8"><i class="ti ti-clipboard-check"></i></div>
+            <div class="stat-label">Today's Orders</div>
+            <div class="stat-val">8</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#dcfce7;color:#15803d"><i class="ti ti-currency-rupee"></i></div>
+            <div class="stat-label">Today's Sales</div>
+            <div class="stat-val">₹8,400</div>
+          </div>
+        </div>
+        <div class="row-2" style="margin-bottom:12px">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#fef9c3;color:#a16207"><i class="ti ti-clock"></i></div>
+            <div class="stat-label">To Collect</div>
+            <div class="stat-val">₹2,400</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#f3e8ff;color:#7c3aed"><i class="ti ti-building-store"></i></div>
+            <div class="stat-label">My Shops</div>
+            <div class="stat-val">18</div>
+          </div>
+        </div>
+        <button class="btn-primary" style="margin-bottom:10px" onclick="goTo('pg-select-shop')">
+          <i class="ti ti-plus" style="margin-right:6px;vertical-align:-2px"></i>Create New Order
+        </button>
+        <button class="btn-outline" onclick="goTo('pg-order-history')">View Order History</button>
+        <div class="section-label">Recent Orders</div>
+        <div class="list-item" onclick="goTo('pg-bill')">
+          <div class="avatar">RS</div>
+          <div class="li-body"><div class="li-title">Ram Stores</div><div class="li-sub">ORD-001 • 10:30 AM</div></div>
+          <div class="li-right"><div class="li-val">₹1,240</div><div class="li-badge badge-green">Paid</div></div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-bill')">
+          <div class="avatar">SK</div>
+          <div class="li-body"><div class="li-title">Sai Kirana</div><div class="li-sub">ORD-002 • 11:15 AM</div></div>
+          <div class="li-right"><div class="li-val">₹860</div><div class="li-badge badge-amber">Pending</div></div>
+        </div>
+      </div>
+      <div class="nav-tabs">
+        <button class="nav-tab active"><i class="ti ti-layout-dashboard"></i><span>Home</span></button>
+        <button class="nav-tab" onclick="goTo('pg-select-shop')"><i class="ti ti-plus"></i><span>New Order</span></button>
+        <button class="nav-tab" onclick="goTo('pg-order-history')"><i class="ti ti-history"></i><span>History</span></button>
+        <button class="nav-tab" onclick="goTo('pg-collect-payment')"><i class="ti ti-cash"></i><span>Collect</span></button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         SELECT SHOP
+    ════════════════════════════════════════════ -->
+    <div class="page" id="pg-select-shop">
+      <div class="header">
+        <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i></button>
+        <h2>Step 1: Select Shop</h2>
+      </div>
+      <div class="scroll-area">
+        <div class="search-box">
+          <i class="ti ti-search"></i>
+          <input type="text" placeholder="Search shop name...">
+        </div>
+        <p style="font-size:12px;color:var(--gr-text-2);margin-bottom:8px">My Assigned Shops (18)</p>
+        <div class="list-item" onclick="goTo('pg-create-order')">
+          <div class="avatar">RS</div>
+          <div class="li-body"><div class="li-title">Ram Stores</div><div class="li-sub">Ramesh Kumar • Gandhi Nagar</div></div>
+          <i class="ti ti-chevron-right" style="color:var(--gr-text-3)"></i>
+        </div>
+        <div class="list-item" onclick="goTo('pg-create-order')">
+          <div class="avatar">SK</div>
+          <div class="li-body"><div class="li-title">Sai Kirana</div><div class="li-sub">Sai Prasad • T. Nagar</div></div>
+          <i class="ti ti-chevron-right" style="color:var(--gr-text-3)"></i>
+        </div>
+        <div class="list-item" onclick="goTo('pg-create-order')">
+          <div class="avatar">LM</div>
+          <div class="li-body"><div class="li-title">Lucky Mini Mart</div><div class="li-sub">Lakshmi Devi • Anna Nagar</div></div>
+          <i class="ti ti-chevron-right" style="color:var(--gr-text-3)"></i>
+        </div>
+        <div class="list-item" onclick="goTo('pg-create-order')">
+          <div class="avatar">BK</div>
+          <div class="li-body"><div class="li-title">Balaji Kirana</div><div class="li-sub">Balaji Rao • Mylapore</div></div>
+          <i class="ti ti-chevron-right" style="color:var(--gr-text-3)"></i>
+        </div>
+        <div class="list-item" onclick="goTo('pg-create-order')">
+          <div class="avatar">PS</div>
+          <div class="li-body"><div class="li-title">Pavan Supermarket</div><div class="li-sub">Pavan Kumar • Adyar</div></div>
+          <i class="ti ti-chevron-right" style="color:var(--gr-text-3)"></i>
+        </div>
+      </div>
+      <div class="nav-tabs">
+        <button class="nav-tab" onclick="goTo('pg-sales-dash')"><i class="ti ti-layout-dashboard"></i><span>Home</span></button>
+        <button class="nav-tab active"><i class="ti ti-plus"></i><span>New Order</span></button>
+        <button class="nav-tab" onclick="goTo('pg-order-history')"><i class="ti ti-history"></i><span>History</span></button>
+        <button class="nav-tab" onclick="goTo('pg-collect-payment')"><i class="ti ti-cash"></i><span>Collect</span></button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         CREATE ORDER
+    ════════════════════════════════════════════ -->
+    <div class="page" id="pg-create-order">
+      <div class="header">
+        <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i></button>
+        <h2>Step 2: Add Products</h2>
+      </div>
+      <div style="background:#dbeafe;padding:8px 16px;border-bottom:1px solid #bfdbfe">
+        <p style="font-size:12px;color:#1d4ed8;font-weight:600">
+          <i class="ti ti-building-store" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>
+          Ram Stores — Ramesh Kumar
+        </p>
+      </div>
+      <div class="scroll-area">
+        <p style="font-size:12px;color:var(--gr-text-2);margin-bottom:10px">Select products and enter quantity</p>
+        <!-- Product Row Template -->
+        <div class="card" style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+            <div><div style="font-size:13px;font-weight:600;color:var(--gr-text)">GR Roasted Peanuts 200g</div><div style="font-size:11px;color:var(--gr-text-2)">₹45 / pack</div></div>
+            <div class="stepper">
+              <button class="stepper-btn" onclick="changeQty('p1',-1)">−</button>
+              <span class="stepper-val" id="qty-p1">0</span>
+              <button class="stepper-btn" onclick="changeQty('p1',1)">+</button>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-end"><span style="font-size:12px;color:var(--gr-text-2)">Subtotal: <strong id="sub-p1" style="color:var(--gr-text)">₹0</strong></span></div>
+        </div>
+        <div class="card" style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+            <div><div style="font-size:13px;font-weight:600;color:var(--gr-text)">GR Salted Peanuts 100g</div><div style="font-size:11px;color:var(--gr-text-2)">₹25 / pack</div></div>
+            <div class="stepper">
+              <button class="stepper-btn" onclick="changeQty('p2',-1)">−</button>
+              <span class="stepper-val" id="qty-p2">0</span>
+              <button class="stepper-btn" onclick="changeQty('p2',1)">+</button>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-end"><span style="font-size:12px;color:var(--gr-text-2)">Subtotal: <strong id="sub-p2" style="color:var(--gr-text)">₹0</strong></span></div>
+        </div>
+        <div class="card" style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+            <div><div style="font-size:13px;font-weight:600;color:var(--gr-text)">GR Masala Peanuts 200g</div><div style="font-size:11px;color:var(--gr-text-2)">₹48 / pack</div></div>
+            <div class="stepper">
+              <button class="stepper-btn" onclick="changeQty('p3',-1)">−</button>
+              <span class="stepper-val" id="qty-p3">0</span>
+              <button class="stepper-btn" onclick="changeQty('p3',1)">+</button>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-end"><span style="font-size:12px;color:var(--gr-text-2)">Subtotal: <strong id="sub-p3" style="color:var(--gr-text)">₹0</strong></span></div>
+        </div>
+        <div class="card" style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+            <div><div style="font-size:13px;font-weight:600;color:var(--gr-text)">GR Chilli Peanuts 100g</div><div style="font-size:11px;color:var(--gr-text-2)">₹28 / pack</div></div>
+            <div class="stepper">
+              <button class="stepper-btn" onclick="changeQty('p4',-1)">−</button>
+              <span class="stepper-val" id="qty-p4">0</span>
+              <button class="stepper-btn" onclick="changeQty('p4',1)">+</button>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-end"><span style="font-size:12px;color:var(--gr-text-2)">Subtotal: <strong id="sub-p4" style="color:var(--gr-text)">₹0</strong></span></div>
+        </div>
+        <div class="card" style="background:var(--gr-primary-light);border-color:#bfdbfe;margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:14px;font-weight:700;color:var(--gr-text)">Grand Total</span>
+            <span style="font-size:20px;font-weight:800;color:var(--gr-primary)" id="grand-total">₹0</span>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="submitOrder()">Proceed to Review Bill →</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         BILL / INVOICE
+    ════════════════════════════════════════════ -->
+    <div class="page" id="pg-bill">
+      <div class="header">
+        <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i></button>
+        <h2>Bill / Invoice</h2>
+        <button class="action-btn" onclick="showToast('Bill shared via WhatsApp!')">
+          <i class="ti ti-share" style="font-size:14px;vertical-align:-2px"></i> Share
+        </button>
+      </div>
+      <div class="scroll-area">
+        <div class="card">
+          <div style="text-align:center;border-bottom:1px dashed var(--gr-border);padding-bottom:14px;margin-bottom:14px">
+            <div style="display:inline-flex;width:44px;height:44px;background:var(--gr-primary);border-radius:10px;align-items:center;justify-content:center;margin-bottom:6px">
+              <span style="font-size:18px;font-weight:900;color:#fff">GR</span>
+            </div>
+            <div style="font-size:14px;font-weight:800;color:var(--gr-text)">GR Distribution</div>
+            <div style="font-size:11px;color:var(--gr-text-2)">Chennai, Tamil Nadu</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+            <div>
+              <div style="font-size:11px;color:var(--gr-text-2)">Bill To</div>
+              <div style="font-size:13px;font-weight:700">Ram Stores</div>
+              <div style="font-size:11px;color:var(--gr-text-2)">Ramesh Kumar</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:11px;color:var(--gr-text-2)">Invoice #</div>
+              <div style="font-size:13px;font-weight:700">ORD-001</div>
+              <div style="font-size:11px;color:var(--gr-text-2)">5 Jun 2026</div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div style="display:flex;gap:4px;font-size:11px;font-weight:700;color:var(--gr-text-2);padding:4px 0;border-bottom:0.5px solid var(--gr-border);margin-bottom:4px">
+            <span style="flex:1">Product</span>
+            <span style="width:36px;text-align:center">Qty</span>
+            <span style="width:48px;text-align:center">Rate</span>
+            <span style="width:52px;text-align:right">Total</span>
+          </div>
+          <div class="bill-row">
+            <div style="flex:1;font-size:12px">GR Roasted 200g</div>
+            <div style="width:36px;text-align:center;font-size:12px">10</div>
+            <div style="width:48px;text-align:center;font-size:12px">₹45</div>
+            <div style="width:52px;text-align:right;font-size:12px;font-weight:600">₹450</div>
+          </div>
+          <div class="bill-row">
+            <div style="flex:1;font-size:12px">GR Salted 100g</div>
+            <div style="width:36px;text-align:center;font-size:12px">8</div>
+            <div style="width:48px;text-align:center;font-size:12px">₹25</div>
+            <div style="width:52px;text-align:right;font-size:12px;font-weight:600">₹200</div>
+          </div>
+          <div class="bill-row">
+            <div style="flex:1;font-size:12px">GR Masala 200g</div>
+            <div style="width:36px;text-align:center;font-size:12px">12</div>
+            <div style="width:48px;text-align:center;font-size:12px">₹48</div>
+            <div style="width:52px;text-align:right;font-size:12px;font-weight:600">₹576</div>
+          </div>
+          <div class="bill-row" style="border-bottom:none">
+            <div style="flex:1;font-size:12px">GR Chilli 100g</div>
+            <div style="width:36px;text-align:center;font-size:12px">1</div>
+            <div style="width:48px;text-align:center;font-size:12px">₹28</div>
+            <div style="width:52px;text-align:right;font-size:12px;font-weight:600">₹14</div>
+          </div>
+          <div class="divider"></div>
+          <div class="bill-total-row"><span style="font-size:12px;color:var(--gr-text-2)">Subtotal</span><span style="font-size:13px;font-weight:600">₹1,240</span></div>
+          <div class="bill-total-row" style="padding:4px 0"><span style="font-size:12px;color:var(--gr-text-2)">GST (5%)</span><span style="font-size:13px;font-weight:600">₹62</span></div>
+          <div style="background:var(--gr-primary);border-radius:8px;padding:12px;display:flex;justify-content:space-between;margin-top:8px">
+            <span style="font-size:14px;font-weight:700;color:#fff">Grand Total</span>
+            <span style="font-size:16px;font-weight:800;color:#fff">₹1,302</span>
+          </div>
+          <div class="divider"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:12px;color:var(--gr-text-2)">Payment Status</span>
+            <span class="li-badge badge-green">PAID — Cash</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+            <span style="font-size:12px;color:var(--gr-text-2)">Salesman</span>
+            <span style="font-size:12px;font-weight:600;color:var(--gr-text)">Ravi Kumar</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:4px">
+          <button class="btn-sm-outline" style="flex:1" onclick="showToast('Bill downloaded as PDF!')">
+            <i class="ti ti-download" style="font-size:13px;vertical-align:-2px;margin-right:4px"></i>Download
+          </button>
+          <button class="btn-sm" style="flex:1" onclick="goTo('pg-collect-payment')">Collect Payment</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         ORDER HISTORY
+    ════════════════════════════════════════════ -->
+    <div class="page" id="pg-order-history">
+      <div class="header">
+        <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i></button>
+        <h2>Order History</h2>
+      </div>
+      <div class="scroll-area">
+        <div style="display:flex;gap:6px;margin-bottom:12px">
+          <div class="chip" style="white-space:nowrap;background:var(--gr-primary-light);color:var(--gr-primary);border-color:var(--gr-primary)">Today</div>
+          <div class="chip" style="white-space:nowrap">This Week</div>
+          <div class="chip" style="white-space:nowrap">This Month</div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-bill')">
+          <div class="avatar">RS</div>
+          <div class="li-body"><div class="li-title">Ram Stores</div><div class="li-sub">ORD-001 • 5 Jun • 10:30 AM</div></div>
+          <div class="li-right"><div class="li-val">₹1,302</div><div class="li-badge badge-green">Paid</div></div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-bill')">
+          <div class="avatar">SK</div>
+          <div class="li-body"><div class="li-title">Sai Kirana</div><div class="li-sub">ORD-002 • 5 Jun • 11:15 AM</div></div>
+          <div class="li-right"><div class="li-val">₹860</div><div class="li-badge badge-amber">Pending</div></div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-bill')">
+          <div class="avatar">LM</div>
+          <div class="li-body"><div class="li-title">Lucky Mini Mart</div><div class="li-sub">ORD-003 • 4 Jun • 09:00 AM</div></div>
+          <div class="li-right"><div class="li-val">₹2,205</div><div class="li-badge badge-green">Paid</div></div>
+        </div>
+        <div class="list-item" onclick="goTo('pg-bill')">
+          <div class="avatar">PS</div>
+          <div class="li-body"><div class="li-title">Pavan Supermarket</div><div class="li-sub">ORD-004 • 3 Jun • 02:00 PM</div></div>
+          <div class="li-right"><div class="li-val">₹1,575</div><div class="li-badge badge-green">Paid</div></div>
+        </div>
+      </div>
+      <div class="nav-tabs">
+        <button class="nav-tab" onclick="goTo('pg-sales-dash')"><i class="ti ti-layout-dashboard"></i><span>Home</span></button>
+        <button class="nav-tab" onclick="goTo('pg-select-shop')"><i class="ti ti-plus"></i><span>New Order</span></button>
+        <button class="nav-tab active"><i class="ti ti-history"></i><span>History</span></button>
+        <button class="nav-tab" onclick="goTo('pg-collect-payment')"><i class="ti ti-cash"></i><span>Collect</span></button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         COLLECT PAYMENT
+    ════════════════════════════════════════════ -->
+    <div class="page" id="pg-collect-payment">
+      <div class="header">
+        <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i></button>
+        <h2>Collect Payment</h2>
+      </div>
+      <div class="scroll-area">
+        <div class="card" style="margin-bottom:14px">
+          <div style="font-size:11px;color:var(--gr-text-2);margin-bottom:4px">Collecting for</div>
+          <div style="font-size:15px;font-weight:700;color:var(--gr-text)">Sai Kirana — ORD-002</div>
+          <div style="font-size:13px;color:var(--gr-text-2)">Sai Prasad</div>
+          <div class="divider"></div>
+          <div style="display:flex;justify-content:space-between">
+            <span style="font-size:13px;color:var(--gr-text-2)">Amount Due</span>
+            <span style="font-size:18px;font-weight:800;color:var(--gr-danger)">₹860</span>
+          </div>
+        </div>
+        <div class="section-label">Select Payment Method</div>
+        <div class="pay-opt selected" onclick="selectPay(this)">
+          <div class="pay-opt-icon" style="background:#dcfce7;color:#15803d"><i class="ti ti-cash"></i></div>
+          <div><div class="pay-opt-name">Cash</div></div>
+          <i class="ti ti-circle-check" style="margin-left:auto;color:var(--gr-primary);font-size:18px"></i>
+        </div>
+        <div class="pay-opt" onclick="selectPay(this)">
+          <div class="pay-opt-icon" style="background:#fce7f3;color:#be185d;font-size:12px;font-weight:800">UPI</div>
+          <div><div class="pay-opt-name">UPI</div></div>
+        </div>
+        <div class="pay-opt" onclick="selectPay(this)">
+          <div class="pay-opt-icon" style="background:#dbeafe;color:#1d4ed8"><i class="ti ti-brand-google"></i></div>
+          <div><div class="pay-opt-name">Google Pay</div></div>
+        </div>
+        <div class="pay-opt" onclick="selectPay(this)">
+          <div class="pay-opt-icon" style="background:#fef9c3;color:#a16207"><i class="ti ti-device-mobile"></i></div>
+          <div><div class="pay-opt-name">PhonePe</div></div>
+        </div>
+        <div class="input-group" style="margin-top:14px"><label>Amount Received (₹)</label><input type="number" placeholder="Enter amount" value="860"></div>
+        <div class="input-group"><label>Transaction ID (Optional)</label><input type="text" placeholder="For UPI / Digital payments"></div>
+        <div class="input-group"><label>Notes (Optional)</label><input type="text" placeholder="Any remarks..."></div>
+        <button class="btn-primary" onclick="showToast('Payment of ₹860 recorded successfully!');goTo('pg-sales-dash')">Confirm Payment</button>
+      </div>
+      <div class="nav-tabs">
+        <button class="nav-tab" onclick="goTo('pg-sales-dash')"><i class="ti ti-layout-dashboard"></i><span>Home</span></button>
+        <button class="nav-tab" onclick="goTo('pg-select-shop')"><i class="ti ti-plus"></i><span>New Order</span></button>
+        <button class="nav-tab" onclick="goTo('pg-order-history')"><i class="ti ti-history"></i><span>History</span></button>
+        <button class="nav-tab active"><i class="ti ti-cash"></i><span>Collect</span></button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         ORDER SUCCESS
+    ════════════════════════════════════════════ -->
+    <div class="page" id="pg-order-success">
+      <div class="scroll-area" style="display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100%;text-align:center">
+        <div style="width:80px;height:80px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px;color:#16a34a;margin-bottom:20px">
+          <i class="ti ti-circle-check"></i>
+        </div>
+        <h2 style="font-size:20px;font-weight:800;color:var(--gr-text);margin-bottom:8px">Order Placed!</h2>
+        <p style="font-size:13px;color:var(--gr-text-2);max-width:240px;line-height:1.5">
+          Your order for <strong>Ram Stores</strong> has been submitted. Admin has been notified.
+        </p>
+        <div class="card" style="width:100%;margin:20px 0;text-align:left">
+          <div class="bill-row"><span style="font-size:12px;color:var(--gr-text-2)">Order ID</span><span style="font-size:13px;font-weight:700">#ORD-025</span></div>
+          <div class="bill-row"><span style="font-size:12px;color:var(--gr-text-2)">Total Amount</span><span style="font-size:13px;font-weight:700;color:var(--gr-primary)" id="success-total">₹0</span></div>
+          <div class="bill-row" style="border:none"><span style="font-size:12px;color:var(--gr-text-2)">Status</span><span class="li-badge badge-amber">Pending Payment</span></div>
+        </div>
+        <button class="btn-primary" style="width:100%;margin-bottom:10px" onclick="goTo('pg-bill')">View Bill</button>
+        <button class="btn-outline" onclick="goTo('pg-sales-dash')">Back to Dashboard</button>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════
+   DATA
+═══════════════════════════════════════ */
+const prices = { p1: 45, p2: 25, p3: 48, p4: 28 };
+const qtys   = { p1: 0,  p2: 0,  p3: 0,  p4: 0  };
+
+/* ═══════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════ */
+let navHistory  = [];
+let currentPage = 'pg-login';
+
+function goTo(id) {
+  if (id !== 'pg-login' && id !== 'pg-forgot') {
+    navHistory.push(currentPage);
+  }
+  currentPage = id;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const pg = document.getElementById(id);
+  if (pg) {
+    pg.classList.add('active');
+    const scroll = pg.querySelector('.scroll-area');
+    if (scroll) scroll.scrollTop = 0;
+  }
+  if (id === 'pg-reports') buildChart();
+}
+
+function goBack() {
+  const prev = navHistory.pop() || 'pg-login';
+  currentPage = prev;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(prev).classList.add('active');
+}
+
+/* ═══════════════════════════════════════
+   AUTH
+═══════════════════════════════════════ */
+function handleLogin() {
+  const u = document.getElementById('login-user').value.toLowerCase().trim();
+  if (u === 'admin') goTo('pg-admin-dash');
+  else goTo('pg-sales-dash');
+}
+
+/* ═══════════════════════════════════════
+   ORDER — QTY STEPPER & TOTAL
+═══════════════════════════════════════ */
+function changeQty(id, delta) {
+  qtys[id] = Math.max(0, qtys[id] + delta);
+  document.getElementById('qty-' + id).textContent = qtys[id];
+  const sub = qtys[id] * prices[id];
+  document.getElementById('sub-' + id).textContent = '₹' + sub;
+  const total = Object.keys(qtys).reduce((acc, k) => acc + qtys[k] * prices[k], 0);
+  document.getElementById('grand-total').textContent = '₹' + total;
+}
+
+function submitOrder() {
+  const total = Object.keys(qtys).reduce((acc, k) => acc + qtys[k] * prices[k], 0);
+  if (total === 0) { showToast('Please add at least one product!'); return; }
+  document.getElementById('success-total').textContent = '₹' + total;
+  goTo('pg-order-success');
+}
+
+/* ═══════════════════════════════════════
+   PAYMENT SELECTION
+═══════════════════════════════════════ */
+function selectPay(el) {
+  document.querySelectorAll('.pay-opt').forEach(o => {
+    o.classList.remove('selected');
+    const ic = o.querySelector('.ti-circle-check');
+    if (ic) ic.remove();
+  });
+  el.classList.add('selected');
+  const i = document.createElement('i');
+  i.className = 'ti ti-circle-check';
+  i.style = 'margin-left:auto;color:var(--gr-primary);font-size:18px';
+  el.appendChild(i);
+}
+
+/* ═══════════════════════════════════════
+   TOAST
+═══════════════════════════════════════ */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2000);
+}
+
+/* ═══════════════════════════════════════
+   REPORTS MINI CHART
+═══════════════════════════════════════ */
+function buildChart() {
+  const el = document.getElementById('mini-chart');
+  if (!el || el.children.length > 0) return;
+  const vals = [16200, 14800, 18900, 15600, 18240];
+  const mx   = Math.max(...vals);
+  vals.forEach((v, i) => {
+    const wrap = document.createElement('div');
+    wrap.style = 'flex:1;display:flex;flex-direction:column;align-items:center;gap:4px';
+    const lbl = document.createElement('div');
+    lbl.style = 'font-size:9px;color:var(--gr-text-2);font-weight:600';
+    lbl.textContent = '₹' + (v / 1000).toFixed(0) + 'k';
+    const bar = document.createElement('div');
+    const h = Math.round((v / mx) * 68);
+    bar.style = `width:100%;height:${h}px;background:${i === 4 ? 'var(--gr-primary)' : '#bfdbfe'};border-radius:4px 4px 0 0`;
+    wrap.appendChild(lbl);
+    wrap.appendChild(bar);
+    el.appendChild(wrap);
+  });
+}
+</script>
+</body>
+</html>
